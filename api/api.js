@@ -20,3 +20,12 @@ export function checkLoginExists(username, password){
     }
     return false;
 }
+
+export function checkUserExists(username){
+    const usersCollection = getCollection("users");
+    const user = query(usersCollection,where("username", "==", username))
+    if(user.exists){
+        return true;
+    }
+    return false;
+}
