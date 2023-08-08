@@ -14,6 +14,7 @@ export default function App() {
     const themeStyles ={
         backgroundColor: theme ? "#1a1a1a" : "#fff",
         color: theme ? "#fff" : "#1a1a1a",
+        transition: "all 0.5s ease"
     }
 
 
