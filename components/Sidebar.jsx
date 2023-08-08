@@ -11,6 +11,7 @@ export default function Sidebar(props) {
         }`}
         onClick={() => {
           props.setCurrentNoteId(note.id);
+          props.setCurrentTab("preview")
         }}
       >
         <h4 className="text-snippet">{note.body.split("\n")[0]}</h4>

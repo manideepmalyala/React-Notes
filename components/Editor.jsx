@@ -1,30 +1,28 @@
-import React from "react"
-import ReactMde from "react-mde"
-import Showdown from "showdown"
+import React from "react";
+import ReactMde from "react-mde";
+import Showdown from "showdown";
 
-export default function Editor({ tempNoteText, setTempNoteText }) {
-    const [selectedTab, setSelectedTab] = React.useState("preview")
+export default function Editor({ tempNoteText, setTempNoteText, selectedTab, setSelectedTab }) {
+  const converter = new Showdown.Converter({
+    tables: true,
+    simplifiedAutoLink: true,
+    strikethrough: true,
+    tasklists: true,
+  });
 
-    const converter = new Showdown.Converter({
-        tables: true,
-        simplifiedAutoLink: true,
-        strikethrough: true,
-        tasklists: true,
-    })
-
-    return (
-        <section className="pane editor">
-            <ReactMde
-                value={tempNoteText}
-                onChange={setTempNoteText}
-                selectedTab={selectedTab}
-                onTabChange={setSelectedTab}
-                generateMarkdownPreview={(markdown) =>
-                    Promise.resolve(converter.makeHtml(markdown))
-                }
-                minEditorHeight={80}
-                heightUnits="vh"
-            />
-        </section>
-    )
+  return (
+    <section className="pane editor">
+      <ReactMde
+        value={tempNoteText}
+        onChange={setTempNoteText}
+        selectedTab={selectedTab}
+        onTabChange={setSelectedTab}
+        generateMarkdownPreview={(markdown) =>
+          Promise.resolve(converter.makeHtml(markdown))
+        }
+        minEditorHeight={80}
+        heightUnits="vh"
+      />
+    </section>
+  );
 }

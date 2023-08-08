@@ -9,7 +9,7 @@ export default function App() {
   const [notes, setNotes] = React.useState([]);
   const [currentNoteId, setCurrentNoteId] = React.useState("");
   const [tempNoteText, setTempNoteText] = React.useState("");
-  const [selectedTab, setSelectedTab] = React.useState("write");
+  const [selectedTab, setSelectedTab] = React.useState("preview");
   const [theme, setTheme] = React.useState(true);
   const themeStyles = {
     backgroundColor: theme ? "#1a1a1a" : "#fff",
@@ -48,11 +48,6 @@ export default function App() {
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [tempNoteText]);
-
-  React.useEffect(() => {
-    // if existing note is selected then selectedTab should be "preview" by default
-    setSelectedTab("preview");
-  },[currentNoteId]);
 
   async function createNewNote() {
     const newNote = {
@@ -96,15 +91,16 @@ export default function App() {
             setCurrentNoteId={setCurrentNoteId}
             newNote={createNewNote}
             deleteNote={deleteNote}
-            handleTabChange={handleTabChange}
             selectedTab={selectedTab}
             toggleTheme={toggleTheme}
             theme={theme}
+            setCurrentTab={setSelectedTab}
           />
           <Editor
             tempNoteText={tempNoteText}
             setTempNoteText={setTempNoteText}
             selectedTab={selectedTab}
+            setSelectedTab={setSelectedTab}
           />
         </Split>
       ) : (
