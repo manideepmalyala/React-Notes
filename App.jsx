@@ -70,7 +70,6 @@ export default function App() {
         setCurrentNoteId(newNoteRef.id)
         setSelectedTab("write")
     }
-
     async function updateNote(text) {
         setTempNoteText(text)
         const noteRef = doc(db, "notes", currentNoteId)
@@ -94,7 +93,7 @@ export default function App() {
 
     return (
         <main style={themeStyles}>
-            <Login signUp={signUp} isSigningUp={isSigningUp} />
+            <Login signUp={signUp} isSigningUp={isSigningUp}/>
             {
                 notes.length > 0
                     ?
