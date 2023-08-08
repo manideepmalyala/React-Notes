@@ -2,8 +2,9 @@ import React from "react"
 import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
 import Split from "react-split"
+import Login from "./components/Login"
 import { onSnapshot, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
-import { notesCollection, db } from "./firebase"
+import { notesCollection, db , usersCollection} from "./firebase"
 
 export default function App() {
     const [notes, setNotes] = React.useState([])
@@ -11,6 +12,11 @@ export default function App() {
     const [tempNoteText, setTempNoteText] = React.useState("")
     const [selectedTab, setSelectedTab] = React.useState("write")
     const [theme, setTheme] = React.useState(true)
+    const [user, setUser] = React.useState(null)
+    const [loading, setLoading] = React.useState(true)
+    const [isSigningUp, setIsSigningUp] = React.useState(false)
+    const [error, setError] = React.useState(null)
+    const [username, setUsername] = React.useState("")
     const themeStyles ={
         backgroundColor: theme ? "#1a1a1a" : "#fff",
         color: theme ? "#fff" : "#1a1a1a",
@@ -82,9 +88,13 @@ export default function App() {
     function toggleTheme() {
         setTheme(prevTheme => !prevTheme)
     }
+    function signUp() {
+        setIsSigningUp(prevState => !prevState)
+    }
 
     return (
         <main style={themeStyles}>
+            <Login signUp={signUp} isSigningUp={isSigningUp} />
             {
                 notes.length > 0
                     ?
