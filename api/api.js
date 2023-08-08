@@ -21,9 +21,9 @@ export function checkLoginExists(username, password){
     return false;
 }
 
-export function checkUserExists(username){
+export function checkUserExists(email){
     const usersCollection = getCollection("users");
-    const user = query(usersCollection,where("username", "==", username))
+    const user = query(usersCollection,where("email", "==", email))
     if(user.exists){
         return true;
     }

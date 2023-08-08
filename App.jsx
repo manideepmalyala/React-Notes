@@ -4,7 +4,7 @@ import Editor from "./components/Editor"
 import Split from "react-split"
 import Login from "./components/Login"
 import { onSnapshot, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
-import { notesCollection, db , usersCollection} from "./firebase"
+import { notesCollection, db , usersCollection} from "./api/firebase"
 
 export default function App() {
     const [notes, setNotes] = React.useState([])
@@ -70,7 +70,6 @@ export default function App() {
         setCurrentNoteId(newNoteRef.id)
         setSelectedTab("write")
     }
-
     async function updateNote(text) {
         setTempNoteText(text)
         const noteRef = doc(db, "notes", currentNoteId)
@@ -94,7 +93,7 @@ export default function App() {
 
     return (
         <main style={themeStyles}>
-            <Login signUp={signUp} isSigningUp={isSigningUp} />
+            <Login signUp={signUp} isSigningUp={isSigningUp}/>
             {
                 notes.length > 0
                     ?
