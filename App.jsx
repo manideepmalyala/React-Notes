@@ -60,6 +60,7 @@ export default function App() {
         return () => clearTimeout(timeoutId)
     }, [tempNoteText])
 
+    // Creates a new note object with default text and adds it to the database
     async function createNewNote() {
         const newNote = {
             body: "# Type your markdown note's title here",
@@ -70,27 +71,37 @@ export default function App() {
         setCurrentNoteId(newNoteRef.id)
         setSelectedTab("write")
     }
+
+    // Updates the body of the current note in the database with the new text
     async function updateNote(text) {
         setTempNoteText(text)
         const noteRef = doc(db, "notes", currentNoteId)
         await setDoc(noteRef, { body: text, updatedAt: Date.now() }, { merge: true })
     }
 
+    // Deletes the note with the given ID from the database
     async function deleteNote(noteId) {
         const noteRef = doc(db, "notes", noteId)
         await deleteDoc(noteRef)
 
     }
+
+    // Toggles the selected tab between "write" and "preview"
     function handleTabChange() {
         setSelectedTab(selectedTab === "write" ? "preview" : "write")
     }
+
+    // Toggles the theme between light and dark mode
     function toggleTheme() {
         setTheme(prevTheme => !prevTheme)
     }
+
+    // Toggles the sign up form
     function signUp() {
         setIsSigningUp(prevState => !prevState)
     }
 
+    // Renders the main application UI, including the login form, sidebar, and editor
     return (
         <main style={themeStyles}>
             <Login signUp={signUp} isSigningUp={isSigningUp}/>
