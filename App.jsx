@@ -10,7 +10,7 @@ export default function App() {
     const [notes, setNotes] = React.useState([])
     const [currentNoteId, setCurrentNoteId] = React.useState("")
     const [tempNoteText, setTempNoteText] = React.useState("")
-    const [selectedTab, setSelectedTab] = React.useState("write")
+    const [selectedTab, setSelectedTab] = React.useState("preview")
     const [theme, setTheme] = React.useState(true)
     const [User, setUser] = React.useState({email:"",uid:""})
     const [isLoggedIn, setIsLoggedIn] = React.useState(false)
@@ -116,11 +116,13 @@ export default function App() {
                                 selectedTab={selectedTab}
                                 toggleTheme={toggleTheme}
                                 theme={theme}
+                                setSelectedTab={setSelectedTab}
                             />
                             <Editor
                                 tempNoteText={tempNoteText}
                                 setTempNoteText={setTempNoteText}
                                 selectedTab={selectedTab}
+                                setSelectedTab={setSelectedTab}
                             />
 
                         </Split>

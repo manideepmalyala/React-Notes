@@ -2,9 +2,7 @@ import React from "react"
 import ReactMde from "react-mde"
 import Showdown from "showdown"
 
-export default function Editor({ tempNoteText, setTempNoteText }) {
-    const [selectedTab, setSelectedTab] = React.useState("preview")
-
+export default function Editor({ tempNoteText, setTempNoteText, selectedTab, setSelectedTab }) {
     const converter = new Showdown.Converter({
         tables: true,
         simplifiedAutoLink: true,
