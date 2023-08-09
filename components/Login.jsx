@@ -1,7 +1,5 @@
 import React from "react";
-import { db, usersCollection } from "../api/firebase";
-import { addDoc } from "firebase/firestore";
-import { checkUserExists } from "../api/api";
+import { checkUserExists, createUser } from "../api/api";
 
 export default function Login() {
   const [userdetails, setUserDetails] = React.useState({
@@ -9,6 +7,7 @@ export default function Login() {
     password: "",
     confirmPassword: ""
   });
+
   const [user, setUser] = React.useState();
   function change(event) {
     const { name, value } = event.target;
@@ -17,7 +16,8 @@ export default function Login() {
       [name]: value
     }));
   }
-  async function createUser(event) {
+
+  async function UserCreation(event) {
     event.preventDefault();
     if (await checkUserExists(userdetails.email)) {
       alert("User already exists");
@@ -27,15 +27,10 @@ export default function Login() {
       alert("Passwords do not match");
       return;
     }
-    try {
-      const userCredential = await addDoc(usersCollection, userdetails);
-      setUser(userCredential);
-      alert("User created successfully");
-    } catch (error) {
-      alert("Error creating user");
-      console.log(error);
-    }
+    const userCredential = await createUser(userdetails);
+    setUser(userCredential);
   }
+
   return (
     <div className="login">
       <form className="login--form">
@@ -60,7 +55,7 @@ export default function Login() {
           onChange={change}
           value={userdetails.confirmPassword}
         />
-        <button onClick={(event) => createUser(event)}>Sign up</button>
+        <button onClick={(event) => UserCreation(event)}>Sign up</button>
       </form>
       <div className="form--footer">
         <p>
