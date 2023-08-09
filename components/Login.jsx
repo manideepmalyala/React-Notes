@@ -1,8 +1,8 @@
 import React from "react";
-import { checkLoginExists, checkUserExists, createUser } from "../api/api";
 import { Alert } from '@mui/material';
+import { checkLoginExists, checkUserExists, createUser, getuserDocumentID } from "../api/api";
 
-export default function Login({ setIsLoggedIn }) {
+export default function Login({ setIsLoggedIn, setUser }) {
   const [userdetails, setUserDetails] = React.useState({
     email: "",
     password: "",
@@ -11,7 +11,6 @@ export default function Login({ setIsLoggedIn }) {
 
   const [loginError, setLoginError] = React.useState(false);
 
-  const [user, setUser] = React.useState();
   const [login, setLogin] = React.useState(true);
   function change(event) {
     const { name, value } = event.target;
@@ -32,7 +31,6 @@ export default function Login({ setIsLoggedIn }) {
       return;
     }
     const userCredential = await createUser(userdetails);
-    setUser(userCredential);
     setUserDetails({
       email: "",
       password: "",
@@ -40,6 +38,7 @@ export default function Login({ setIsLoggedIn }) {
     });
     IsLoggingIn();
   }
+
   function IsLoggingIn() {
     setLogin(!login);
     setLoginError(false);
@@ -50,6 +49,12 @@ export default function Login({ setIsLoggedIn }) {
     const validLogin = await checkLoginExists(userdetails.email, userdetails.password);
     if (validLogin) {
       setIsLoggedIn(true);
+      const userId = await getuserDocumentID(userdetails.email);
+      setUser(prevState => ({
+        ...prevState,
+        email: userdetails.email,
+        uid: userId
+      }))
     }
     else {
       setLoginError(true);
