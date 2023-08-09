@@ -1,7 +1,7 @@
 import React from "react";
 import { checkLoginExists, checkUserExists, createUser } from "../api/api";
 
-export default function Login() {
+export default function Login({ setIsLoggedIn }) {
   const [userdetails, setUserDetails] = React.useState({
     email: "",
     password: "",
@@ -30,9 +30,27 @@ export default function Login() {
     }
     const userCredential = await createUser(userdetails);
     setUser(userCredential);
+    setUserDetails({
+      email: "",
+      password: "",
+      confirmPassword: ""
+    });
+    IsLoggingIn();
   }
   function IsLoggingIn() {
     setLogin(!login);
+  }
+
+  async function checkLoginIsValid(event) {
+    event.preventDefault();
+    const validLogin = await checkLoginExists(userdetails.email, userdetails.password);
+    if (validLogin) {
+      alert("Login successful");
+      setIsLoggedIn(true);
+    }
+    else {
+      alert("Invalid login details");
+    }
   }
 
   return (
@@ -52,22 +70,22 @@ export default function Login() {
           onChange={change}
           value={userdetails.password}
         />
-        {!login &&<input
+        {!login && <input
           type="password"
           placeholder="Confirm password"
           name="confirmPassword"
           onChange={change}
           value={userdetails.confirmPassword}
         />}
-        {login?<button onClick={(event) => checkLoginExists(event)}>Log in</button>:
-        <button onClick={(event) => UserCreation(event)}>Sign up</button>}
+        {login ? <button onClick={(event) => checkLoginIsValid(event)}>Log in</button> :
+          <button onClick={(event) => UserCreation(event)}>Sign up</button>}
 
       </form>
       <div className="form--footer">
-        {!login?<p>
+        {!login ? <p>
           Already have an account? <a href="#" onClick={IsLoggingIn}>Log in</a>
-        </p>:
-        <p>Don't have an account? <a href="#" onClick={IsLoggingIn}>Sign up</a></p>}
+        </p> :
+          <p>Don't have an account? <a href="#" onClick={IsLoggingIn}>Sign up</a></p>}
       </div>
     </div>
   );
