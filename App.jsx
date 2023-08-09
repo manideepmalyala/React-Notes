@@ -12,17 +12,12 @@ export default function App() {
     const [tempNoteText, setTempNoteText] = React.useState("")
     const [selectedTab, setSelectedTab] = React.useState("write")
     const [theme, setTheme] = React.useState(true)
-    const [user, setUser] = React.useState(null)
-    const [loading, setLoading] = React.useState(true)
-    const [isSigningUp, setIsSigningUp] = React.useState(false)
-    const [error, setError] = React.useState(null)
-    const [username, setUsername] = React.useState("")
-    const themeStyles ={
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false)
+    const themeStyles = {
         backgroundColor: theme ? "#1a1a1a" : "#fff",
         color: theme ? "#fff" : "#1a1a1a",
         transition: "all 0.5s ease"
     }
-
 
     const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
 
@@ -104,43 +99,44 @@ export default function App() {
     // Renders the main application UI, including the login form, sidebar, and editor
     return (
         <main style={themeStyles}>
-            <Login signUp={signUp} isSigningUp={isSigningUp}/>
             {
-                notes.length > 0
-                    ?
-                    <Split
-                        sizes={[30, 70]}
-                        direction="horizontal"
-                        className="split"
-                    >
-                        <Sidebar
-                            notes={sortedNotes}
-                            currentNote={currentNote}
-                            setCurrentNoteId={setCurrentNoteId}
-                            newNote={createNewNote}
-                            deleteNote={deleteNote}
-                            handleTabChange={handleTabChange}
-                            selectedTab={selectedTab}
-                            toggleTheme={toggleTheme}
-                            theme={theme}
-                        />
-                        <Editor
-                            tempNoteText={tempNoteText}
-                            setTempNoteText={setTempNoteText}
-                            selectedTab={selectedTab}
-                        />
-
-                    </Split>
-                    :
-                    <div className="no-notes">
-                        <h1>You have no notes</h1>
-                        <button
-                            className="first-note"
-                            onClick={createNewNote}
+                !isLoggedIn ?
+                    <Login setIsLoggedIn={setIsLoggedIn} /> :
+                    notes.length > 0
+                        ?
+                        <Split
+                            sizes={[30, 70]}
+                            direction="horizontal"
+                            className="split"
                         >
-                            Create one now
-                        </button>
-                    </div>
+                            <Sidebar
+                                notes={sortedNotes}
+                                currentNote={currentNote}
+                                setCurrentNoteId={setCurrentNoteId}
+                                newNote={createNewNote}
+                                deleteNote={deleteNote}
+                                handleTabChange={handleTabChange}
+                                selectedTab={selectedTab}
+                                toggleTheme={toggleTheme}
+                                theme={theme}
+                            />
+                            <Editor
+                                tempNoteText={tempNoteText}
+                                setTempNoteText={setTempNoteText}
+                                selectedTab={selectedTab}
+                            />
+
+                        </Split>
+                        :
+                        <div className="no-notes">
+                            <h1>You have no notes</h1>
+                            <button
+                                className="first-note"
+                                onClick={createNewNote}
+                            >
+                                Create one now
+                            </button>
+                        </div>
 
             }
         </main>
