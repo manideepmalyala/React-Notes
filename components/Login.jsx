@@ -1,8 +1,8 @@
 import React from "react";
-import { Alert } from '@mui/material';
 import { checkLoginExists, checkUserExists, createUser,getuserDocumentID } from "../api/api";
 
 export default function Login({ setIsLoggedIn,setUser  }) {
+
   const [userdetails, setUserDetails] = React.useState({
     email: "",
     password: "",
@@ -50,10 +50,12 @@ export default function Login({ setIsLoggedIn,setUser  }) {
     if (validLogin) {
       setIsLoggedIn(true);
       const userId = await getuserDocumentID(userdetails.email);
+
       setUser(prevState =>({
         ...prevState,
         email:userdetails.email,
         uid:userId
+
       }))
     }
     else {
@@ -101,3 +103,4 @@ export default function Login({ setIsLoggedIn,setUser  }) {
     </>
   );
 }
+

@@ -12,7 +12,7 @@ export default function App() {
   const [tempNoteText, setTempNoteText] = React.useState("")
   const [selectedTab, setSelectedTab] = React.useState("write")
   const [theme, setTheme] = React.useState(true)
-  const [User, setUser] = React.useState({email:"",uid:""})
+  const [User, setUser] = React.useState({ email: "", uid: "" })
   const [isLoggedIn, setIsLoggedIn] = React.useState(false)
   const themeStyles = {
       backgroundColor: theme ? "#1a1a1a" : "#fff",
@@ -66,7 +66,6 @@ export default function App() {
       setCurrentNoteId(newNoteRef.id)
       setSelectedTab("write")
   }
-
   // Updates the body of the current note in the database with the new text
   async function updateNote(text) {
       setTempNoteText(text)
@@ -102,7 +101,7 @@ export default function App() {
         <main style={themeStyles}>
             {
                 !isLoggedIn ?
-                    <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser}/> :
+                    <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} /> :
                     notes.length > 0
                         ?
                         <Split
@@ -138,38 +137,8 @@ export default function App() {
                                 Create one now
                             </button>
                         </div>
-
-
-  return (
-    <main style={themeStyles}>
-      {notes.length > 0 ? (
-        <Split sizes={[30, 70]} direction="horizontal" className="split">
-          <Sidebar
-            notes={sortedNotes}
-            currentNote={currentNote}
-            setCurrentNoteId={setCurrentNoteId}
-            newNote={createNewNote}
-            deleteNote={deleteNote}
-            selectedTab={selectedTab}
-            toggleTheme={toggleTheme}
-            theme={theme}
-            setCurrentTab={setSelectedTab}
-          />
-          <Editor
-            tempNoteText={tempNoteText}
-            setTempNoteText={setTempNoteText}
-            selectedTab={selectedTab}
-            setSelectedTab={setSelectedTab}
-          />
-        </Split>
-      ) : (
-        <div className="no-notes">
-          <h1>You have no notes</h1>
-          <button className="first-note" onClick={createNewNote}>
-            Create one now
-          </button>
-        </div>
-      )}
-    </main>
-  );
+            }
+        </main>
+    )
 }
+
