@@ -66,7 +66,7 @@ export async function createUser(userdetails) {
     const userCredential = await addDoc(usersCollection, {
       email: userdetails.email,
       password: hashed_password,
-      createdOn: new Date(),
+      createdOn: Date.now(),
     });
     alert("User created successfully");
     return userCredential;

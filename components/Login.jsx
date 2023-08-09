@@ -1,5 +1,5 @@
 import React from "react";
-import { checkUserExists, createUser } from "../api/api";
+import { checkLoginExists, checkUserExists, createUser } from "../api/api";
 
 export default function Login() {
   const [userdetails, setUserDetails] = React.useState({
@@ -9,6 +9,7 @@ export default function Login() {
   });
 
   const [user, setUser] = React.useState();
+  const [login, setLogin] = React.useState(true);
   function change(event) {
     const { name, value } = event.target;
     setUserDetails((prevState) => ({
@@ -20,7 +21,7 @@ export default function Login() {
   async function UserCreation(event) {
     event.preventDefault();
     if (await checkUserExists(userdetails.email)) {
-      alert("User already exists");
+      alert("User already exists, please log in");
       return;
     }
     if (userdetails.password !== userdetails.confirmPassword) {
@@ -29,6 +30,9 @@ export default function Login() {
     }
     const userCredential = await createUser(userdetails);
     setUser(userCredential);
+  }
+  function IsLoggingIn() {
+    setLogin(!login);
   }
 
   return (
@@ -48,19 +52,22 @@ export default function Login() {
           onChange={change}
           value={userdetails.password}
         />
-        <input
+        {!login &&<input
           type="password"
           placeholder="Confirm password"
           name="confirmPassword"
           onChange={change}
           value={userdetails.confirmPassword}
-        />
-        <button onClick={(event) => UserCreation(event)}>Sign up</button>
+        />}
+        {login?<button onClick={(event) => checkLoginExists(event)}>Log in</button>:
+        <button onClick={(event) => UserCreation(event)}>Sign up</button>}
+
       </form>
       <div className="form--footer">
-        <p>
-          Already have an account? <span>Log in</span>
-        </p>
+        {!login?<p>
+          Already have an account? <a href="#" onClick={IsLoggingIn}>Log in</a>
+        </p>:
+        <p>Don't have an account? <a href="#" onClick={IsLoggingIn}>Sign up</a></p>}
       </div>
     </div>
   );
