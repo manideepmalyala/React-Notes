@@ -74,3 +74,10 @@ export async function createUser(userdetails) {
     alert("Error creating user", ex);
   }
 }
+
+export async function getuserDocumentID(email){
+  const usersCollection = getCollection("users");
+  const q = query(usersCollection, where("email", "==",email));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs[0].id;
+}

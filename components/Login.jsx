@@ -1,14 +1,13 @@
 import React from "react";
-import { checkLoginExists, checkUserExists, createUser } from "../api/api";
+import { checkLoginExists, checkUserExists, createUser,getuserDocumentID } from "../api/api";
 
-export default function Login({ setIsLoggedIn }) {
+export default function Login({ setIsLoggedIn,setUser  }) {
   const [userdetails, setUserDetails] = React.useState({
     email: "",
     password: "",
     confirmPassword: ""
   });
 
-  const [user, setUser] = React.useState();
   const [login, setLogin] = React.useState(true);
   function change(event) {
     const { name, value } = event.target;
@@ -29,7 +28,6 @@ export default function Login({ setIsLoggedIn }) {
       return;
     }
     const userCredential = await createUser(userdetails);
-    setUser(userCredential);
     setUserDetails({
       email: "",
       password: "",
@@ -37,6 +35,7 @@ export default function Login({ setIsLoggedIn }) {
     });
     IsLoggingIn();
   }
+
   function IsLoggingIn() {
     setLogin(!login);
   }
@@ -47,6 +46,12 @@ export default function Login({ setIsLoggedIn }) {
     if (validLogin) {
       alert("Login successful");
       setIsLoggedIn(true);
+      const userId = await getuserDocumentID(userdetails.email);
+      setUser(prevState =>({
+        ...prevState,
+        email:userdetails.email,
+        uid:userId
+      }))
     }
     else {
       alert("Invalid login details");

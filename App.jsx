@@ -12,6 +12,7 @@ export default function App() {
     const [tempNoteText, setTempNoteText] = React.useState("")
     const [selectedTab, setSelectedTab] = React.useState("write")
     const [theme, setTheme] = React.useState(true)
+    const [User, setUser] = React.useState({email:"",uid:""})
     const [isLoggedIn, setIsLoggedIn] = React.useState(false)
     const themeStyles = {
         backgroundColor: theme ? "#1a1a1a" : "#fff",
@@ -57,10 +58,12 @@ export default function App() {
 
     // Creates a new note object with default text and adds it to the database
     async function createNewNote() {
+     
         const newNote = {
             body: "# Type your markdown note's title here",
             createdAt: Date.now(),
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
+            userId: User.uid
         }
         const newNoteRef = await addDoc(notesCollection, newNote)
         setCurrentNoteId(newNoteRef.id)
@@ -90,18 +93,12 @@ export default function App() {
     function toggleTheme() {
         setTheme(prevTheme => !prevTheme)
     }
-
-    // Toggles the sign up form
-    function signUp() {
-        setIsSigningUp(prevState => !prevState)
-    }
-
     // Renders the main application UI, including the login form, sidebar, and editor
     return (
         <main style={themeStyles}>
             {
                 !isLoggedIn ?
-                    <Login setIsLoggedIn={setIsLoggedIn} /> :
+                    <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser}/> :
                     notes.length > 0
                         ?
                         <Split
