@@ -1,6 +1,16 @@
 import { db } from "./firebase";
 import crypto from "crypto-js";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 
 /**
  * Returns a reference to the Firestore collection with the given name.
@@ -75,9 +85,43 @@ export async function createUser(userdetails) {
   }
 }
 
-export async function getuserDocumentID(email){
+/**
+ * Returns a Promise that resolves to the document ID for the user with the given email.
+ * @param {string} email - The email of the user.
+ * @returns {Promise<string>} A Promise that resolves to the document ID.
+ */
+export async function getuserDocumentID(email) {
   const usersCollection = getCollection("users");
-  const q = query(usersCollection, where("email", "==",email));
+  const q = query(usersCollection, where("email", "==", email));
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs[0].id;
+}
+
+/**
+ * Updates the record with the given ID in the collection with the given name.
+ * @param {string} collection - The name of the collection.
+ * @param {string} recordIdentifier - The ID of the record to update.
+ * @param {Record<string, any>} record - The updated record data.
+ * @param {boolean} [merge=false] - Whether to merge the updated data with the existing data.
+ * @returns {Promise<void>} A Promise that resolves when the record has been updated.
+ */
+export function updateRecord(
+  collection,
+  recordIdentifier,
+  record,
+  merge = false
+) {
+  const docRef = doc(db, collection, recordIdentifier);
+  setDoc(docRef, record, { merge: merge });
+}
+
+/**
+ * Deletes a document with the given recordIdentifier from the Firestore collection with the given collection name.
+ * @param {string} collection - The name of the collection.
+ * @param {string} recordIdentifier - The ID of the record to delete.
+ * @returns {Promise<void>} A Promise that resolves when the document has been deleted.
+ */
+export async function deleteRecord(collection, recordIdentifier) {
+  const docRef = doc(db, collection, recordIdentifier);
+  await deleteDoc(docRef);
 }
