@@ -7,19 +7,21 @@ export default function Sidebar(props) {
     const noteElements = props.notes.map((note, index) => (
         <div key={note.id}>
             <div
-                
-                className={`title ${
-                    note.id === props.currentNote.id ? "selected-note" : ""
-                }`}
-                onClick={() => {props.setCurrentNoteId(note.id)}}
+
+                className={`title ${note.id === props.currentNote.id ? "selected-note" : ""
+                    }`}
+                onClick={() => {
+                    props.setCurrentNoteId(note.id);
+                    props.setSelectedTab("preview");
+
+                }}
             >
                 <h4 className="text-snippet">{note.body.split("\n")[0]}</h4>
-                <small className={`updated-at ${
-                    note.id === props.currentNote.id ? "selected-note" : ""
-                }`}>
+                <small className={`updated-at ${note.id === props.currentNote.id ? "selected-note" : ""
+                    }`}>
                     {new Date(note.updatedAt).toLocaleString()}
                 </small>
-                <button 
+                <button
                     className="delete-btn"
                     onClick={() => props.deleteNote(note.id)}
                 >
@@ -36,8 +38,8 @@ export default function Sidebar(props) {
                 <button className="new-note" onClick={props.newNote}>+</button>
                 <div onClick={props.toggleTheme}>
 
-                {props.theme?<FontAwesomeIcon icon={faMoon} />:
-                <FontAwesomeIcon icon={faSun} />}
+                    {props.theme ? <FontAwesomeIcon icon={faMoon} /> :
+                        <FontAwesomeIcon icon={faSun} />}
                 </div>
             </div>
             {noteElements}
