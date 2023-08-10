@@ -16,7 +16,7 @@ export default function App() {
         <div style={themeStyles}>
             {
                 !isLoggedIn ?
-                    <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} /> : <Home User={User} />
+                    <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} /> : User?.uid.length > 0 && <Home User={User} />
             }
         </div>
     )
