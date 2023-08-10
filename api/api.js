@@ -75,6 +75,14 @@ export async function createUser(userdetails) {
   }
 }
 
+// export async function getUserFilteredNotes(userid){
+//   const notesCollection = getCollection("notes");
+//   const q = query(notesCollection, where("userid", "==", userid));
+//   const querySnapshot = await getDocs(q);
+//   return querySnapshot;
+
+// }
+
 export async function getuserDocumentID(email){
   const usersCollection = getCollection("users");
   const q = query(usersCollection, where("email", "==",email));

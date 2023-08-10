@@ -5,6 +5,8 @@ import Split from "react-split"
 import Login from "./components/Login"
 import { onSnapshot, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
 import { notesCollection, db } from "./api/firebase"
+import { getUserFilteredNotes } from './api/api'
+import { bottomNavigationActionClasses } from "@mui/material"
 
 export default function App() {
     const [notes, setNotes] = React.useState([])
@@ -12,7 +14,7 @@ export default function App() {
     const [tempNoteText, setTempNoteText] = React.useState("")
     const [selectedTab, setSelectedTab] = React.useState("preview")
     const [theme, setTheme] = React.useState(true)
-    const [User, setUser] = React.useState({email:"",uid:""})
+    const [User, setUser] = React.useState({ email: "", uid: "" })
     const [isLoggedIn, setIsLoggedIn] = React.useState(false)
     const themeStyles = {
         backgroundColor: theme ? "#1a1a1a" : "#fff",
@@ -28,11 +30,13 @@ export default function App() {
 
     React.useEffect(() => {
         const unsubscribe = onSnapshot(notesCollection, function (onSnapshot) {
-            const updatedNotes = onSnapshot.docs.map(doc => (
+            const updatedNotes = onSnapshot.docs.map(doc =>
+            (
                 {
                     ...doc.data(),
                     id: doc.id
-                }))
+                })
+            ).filter(note => note.userId == User.uid)
             setNotes(updatedNotes)
         })
         return unsubscribe
@@ -58,7 +62,6 @@ export default function App() {
 
     // Creates a new note object with default text and adds it to the database
     async function createNewNote() {
-     
         const newNote = {
             body: "# Type your markdown note's title here",
             createdAt: Date.now(),
@@ -98,7 +101,7 @@ export default function App() {
         <main style={themeStyles}>
             {
                 !isLoggedIn ?
-                    <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser}/> :
+                    <Login setIsLoggedIn={setIsLoggedIn} setUser={setUser} /> :
                     notes.length > 0
                         ?
                         <Split
