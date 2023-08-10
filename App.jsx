@@ -5,8 +5,7 @@ import Split from "react-split"
 import Login from "./components/Login"
 import { onSnapshot, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
 import { notesCollection, db } from "./api/firebase"
-import { getUserFilteredNotes } from './api/api'
-import { bottomNavigationActionClasses } from "@mui/material"
+// import { getUserFilteredNotes } from './api/api'
 
 export default function App() {
     const [notes, setNotes] = React.useState([])
