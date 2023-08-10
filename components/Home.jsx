@@ -2,11 +2,10 @@ import React from "react"
 import Sidebar from "./Sidebar"
 import Editor from "./Editor"
 import Split from "react-split"
-import { onSnapshot, addDoc, deleteDoc, doc, setDoc } from "firebase/firestore"
-import { notesCollection, db } from "../api/firebase"
-// import { getUserFilteredNotes } from '../api/api'
+import { onSnapshot, addDoc, query, where } from "firebase/firestore"
+import { getCollection, updateRecord, deleteRecord } from '../api/api'
 
-export default function Home({User}) {
+export default function Home({ User }) {
     const [notes, setNotes] = React.useState([])
     const [currentNoteId, setCurrentNoteId] = React.useState("")
     const [tempNoteText, setTempNoteText] = React.useState("")
@@ -18,21 +17,29 @@ export default function Home({User}) {
         transition: "all 0.5s ease"
     }
 
+    const notesCollection = getCollection("notes");
     const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
 
     const currentNote =
         notes.find(note => note.id === currentNoteId)
         || notes[0]
-
+        
+    /**
+     * Sets up a listener for changes to the notes collection in Firestore.
+     * Filters documents based on the userId field matching the current user's ID.
+     * Updates the state of the notes variable with the updated array of notes.
+     * Returns a function that can be called to unsubscribe from the listener.
+     */
     React.useEffect(() => {
-        const unsubscribe = onSnapshot(notesCollection, function (onSnapshot) {
+        const q = query(notesCollection, where("userId", "==", User.uid));
+        const unsubscribe = onSnapshot(q, function (onSnapshot) {
             const updatedNotes = onSnapshot.docs.map(doc =>
             (
                 {
                     ...doc.data(),
                     id: doc.id
                 })
-            ).filter(note => note.userId == User.uid)
+            )
             setNotes(updatedNotes)
         })
         return unsubscribe
@@ -72,15 +79,12 @@ export default function Home({User}) {
     // Updates the body of the current note in the database with the new text
     async function updateNote(text) {
         setTempNoteText(text)
-        const noteRef = doc(db, "notes", currentNoteId)
-        await setDoc(noteRef, { body: text, updatedAt: Date.now() }, { merge: true })
+        updateRecord("notes", currentNoteId, { body: text, updatedAt: Date.now() }, true)
     }
 
     // Deletes the note with the given ID from the database
     async function deleteNote(noteId) {
-        const noteRef = doc(db, "notes", noteId)
-        await deleteDoc(noteRef)
-
+        deleteRecord("notes", noteId)
     }
 
     // Toggles the selected tab between "write" and "preview"
@@ -92,6 +96,7 @@ export default function Home({User}) {
     function toggleTheme() {
         setTheme(prevTheme => !prevTheme)
     }
+
     // Renders the main application UI, including the login form, sidebar, and editor
     return (
         <main style={themeStyles}>
